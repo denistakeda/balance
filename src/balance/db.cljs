@@ -9,6 +9,7 @@
 ;; initial state of app-db
 (def app-db
   {:greeting "Hello Clojure in iOS and Android!"
+   :current-task-id nil
    :tasks {
       #uuid "40c344a2-27dc-4731-b6a8-55e92494422d"
       {:caption     "Learn Clojure"

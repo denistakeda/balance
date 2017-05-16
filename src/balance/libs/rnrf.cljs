@@ -9,3 +9,9 @@
 
 (defn create-actions [ss]
   (.create actions ss))
+
+(def scene-keys {:home-page "home"
+                 :task-details-page "task_details"})
+
+(defn gt-task-details-page! []
+  (.task_details actions))

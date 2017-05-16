@@ -12,6 +12,11 @@
     (:tasks db)))
 
 (reg-sub
+  :get-current-task-id
+  (fn [db _]
+    (:current-task-id db)))
+
+(reg-sub
   :get-tasks-keys
   :<- [:get-tasks]
   (fn [tasks _]
@@ -20,9 +25,17 @@
          (map #(assoc {} :key %)))))
 
 (reg-sub
+  :get-current-task
+  :<- [:get-current-task-id]
+  :<- [:get-tasks]
+  (fn [[current-task-id tasks] _]
+    (-> tasks
+        (get current-task-id)
+        (assoc :id current-task-id))))
+
+(reg-sub
   :get-task
   :<- [:get-tasks]
   (fn [tasks [_ task-id]]
-    (println (str (assoc (tasks task-id) :id task-id)))
     (assoc (tasks task-id) :id task-id)))
 

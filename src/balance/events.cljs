@@ -2,7 +2,8 @@
   (:require
    [re-frame.core :refer [reg-event-db after]]
    [clojure.spec.alpha :as s]
-   [balance.db :as db :refer [app-db]]))
+   [balance.db :as db :refer [app-db]]
+   [balance.libs.rnrf :as rnrf]))
 
 ;; -- Interceptors ------------------------------------------------------------
 ;;
@@ -33,3 +34,10 @@
  validate-spec
  (fn [db [_ value]]
    (assoc db :greeting value)))
+
+(reg-event-db
+  :open-task-details
+  validate-spec
+  (fn [db [_ task-id]]
+    (rnrf/gt-task-details-page!)
+    (assoc db :current-task-id task-id)))
