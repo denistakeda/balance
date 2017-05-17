@@ -9,7 +9,7 @@
                                 :flex-direction "row"}
              :task-list        {:flex-grow 1}
              :task-item        {:padding 10}
-             :task-caption     {:font-size 18
+             :task-title       {:font-size 18
                                 :color "gray"}
              :task-description {:font-size 12}})
 
@@ -30,8 +30,8 @@
 (defn task-item [task-id]
   (fn []
     (let [task (subscribe [:get-task task-id])
-          {:keys [caption description]} @task]
+          {:keys [title description]} @task]
       [rn/touchable-highlight {:on-press #(dispatch [:open-task-details task-id])}
        [rn/view {:style (:task-item styles)}
-        [rn/text {:style (:task-caption styles)} caption]
+        [rn/text {:style (:task-title styles)} title]
         [rn/text {:style (:task-description styles)} description]]])))

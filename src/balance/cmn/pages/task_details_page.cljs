@@ -1,19 +1,38 @@
 (ns balance.cmn.pages.task-details-page
   (:require [balance.libs.react-native :as rn]
             [reagent.core :as r]
-            [re-frame.core :refer [subscribe]]
+            [re-frame.core :refer [subscribe dispatch]]
             [balance.libs.rnrf :refer [scene-keys]]))
 
 (def page-key (:task-details-page scene-keys))
 (def page-title "Task Details")
 
-;;(defn page []
-;;  [rn/view {:style {:margin-top 64}}
-;;   [rn/text (str "I'm a task details page")]])
+(def styles {:page        {:margin-top 64
+                           :padding 10}
+             :title       {:min-height 40
+                           :font-size 20
+                           :color "gray"}
+             :description {:min-height 40
+                           :font-size 14}})
+
+(defn- update-task [id path value]
+  (dispatch [:update-task id path value]))
 
 (defn page []
   (fn []
-    (let [task (subscribe [:get-current-task])]
-      [rn/view {:style {:margin-top 64}}
-       [rn/text (str @task)]])))
+    (let [task (subscribe [:get-current-task])
+          {:keys [id title description]} @task]
+      [rn/view {:style (:page styles)}
+       [rn/text-input {:style                  (:title styles)
+                       :value                  title
+                       :placeholder            "Title"
+                       :multiline              true
+                       :placeholder-text-color "gray"
+                       :on-change-text         #(update-task id [:title] %)}]
+       [rn/text-input {:style                  (:description styles)
+                       :value                  description
+                       :placeholder            "Task Description"
+                       :multiline              true
+                       :placeholder-text-color "gray"
+                       :on-change-text         #(update-task id [:description] %)}]])))
 

@@ -9,6 +9,7 @@
 (def image (r/adapt-react-class (.-Image ReactNative)))
 (def flat-list (r/adapt-react-class (.-FlatList ReactNative)))
 (def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
+(def text-input (r/adapt-react-class (.-TextInput ReactNative)))
 
 (defn alert [title]
       (.alert (.-Alert ReactNative) title))

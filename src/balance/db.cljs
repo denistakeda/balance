@@ -12,13 +12,13 @@
    :current-task-id nil
    :tasks {
       #uuid "40c344a2-27dc-4731-b6a8-55e92494422d"
-      {:caption     "Learn Clojure"
+      {:title       "Learn Clojure"
        :description "Just learn it a little bit"}
 
       #uuid "dd7eeeea-546b-4569-ba78-c5b62a5c4789"
-      {:caption     "Have a coffe"
+      {:title       "Have a coffe"
        :description "Just relax"}
 
       #uuid "e04bb6b6-03d9-4102-a13e-ad8d142493cb"
-      {:caption     "Implement scroll to bottom"
+      {:title       "Implement scroll to bottom"
        :description "Issue #DIF-777"}}})
