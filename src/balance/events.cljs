@@ -40,13 +40,13 @@
   validate-spec
   (fn [db [_ task-id]]
     (rnrf/gt-task-details-page!)
-    (assoc db :current-task-id task-id)))
+    (assoc-in db [:app-state :current-task-id] task-id)))
 
 (reg-event-db
   :update-task
   validate-spec
   (fn [db [_ task-id path value]]
-    (assoc-in db (into [:tasks task-id] path) value)))
+    (assoc-in db (into [:db :tasks task-id] path) value)))
 
 (reg-event-db
   :create-task
@@ -54,6 +54,6 @@
     (rnrf/gt-task-details-page!)
     (let [id (cljs.core/random-uuid)]
       (-> db
-          (assoc-in [:tasks id] {})
-          (assoc :current-task-id id)))))
+          (assoc-in [:db :tasks id] {})
+          (assoc-in [:app-state :current-task-id] id)))))
 

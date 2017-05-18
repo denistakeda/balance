@@ -7,14 +7,26 @@
     (:greeting db)))
 
 (reg-sub
+  :get-app-state
+  (fn [db _]
+    (:app-state db)))
+
+(reg-sub
+  :get-app-db
+  (fn [db _]
+    (:db db)))
+
+(reg-sub
   :get-tasks
+  :<- [:get-app-db]
   (fn [db _]
     (:tasks db)))
 
 (reg-sub
   :get-current-task-id
-  (fn [db _]
-    (:current-task-id db)))
+  :<- [:get-app-state]
+  (fn [app-state _]
+    (:current-task-id app-state)))
 
 (reg-sub
   :get-tasks-keys
