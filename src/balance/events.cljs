@@ -1,6 +1,6 @@
 (ns balance.events
   (:require
-   [re-frame.core :refer [reg-event-db after]]
+   [re-frame.core :refer [reg-event-db after reg-fx reg-event-fx]]
    [clojure.spec.alpha :as s]
    [balance.db :as db :refer [app-db]]
    [balance.libs.rnrf :as rnrf]))
@@ -21,6 +21,15 @@
     (after (partial check-and-throw ::db/app-db))
     []))
 
+;; -- Effects ---------------------------------------------------------------
+;;
+;; See https://github.com/Day8/re-frame/blob/master/docs/Effects.md
+;;
+(reg-fx
+  :navigate
+  (fn [value]
+    (rnrf/gt-screen! value)))
+
 ;; -- Handlers --------------------------------------------------------------
 
 (reg-event-db
@@ -35,12 +44,13 @@
  (fn [db [_ value]]
    (assoc db :greeting value)))
 
-(reg-event-db
+(reg-event-fx
   :open-task-details
   validate-spec
-  (fn [db [_ task-id]]
-    (rnrf/gt-task-details-page!)
-    (assoc-in db [:app-state :current-task-id] task-id)))
+  (fn [{:keys [db]} [_ task-id]]
+    {:db       (assoc-in db [:app-state :current-task-id] task-id)
+     :navigate :task-details-page}))
+
 
 (reg-event-db
   :update-task
@@ -48,12 +58,13 @@
   (fn [db [_ task-id path value]]
     (assoc-in db (into [:db :tasks task-id] path) value)))
 
-(reg-event-db
+(reg-event-fx
   :create-task
-  (fn [db _]
-    (rnrf/gt-task-details-page!)
-    (let [id (cljs.core/random-uuid)]
-      (-> db
-          (assoc-in [:db :tasks id] {})
-          (assoc-in [:app-state :current-task-id] id)))))
+  validate-spec
+  (fn [{:keys [db]} _]
+    {:navigate :task-details-page
+     :db       (let [id (cljs.core/random-uuid)]
+                 (-> db
+                   (assoc-in [:db :tasks id] {})
+                   (assoc-in [:app-state :current-task-id] id)))}))
 

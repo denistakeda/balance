@@ -13,5 +13,6 @@
 (def scene-keys {:home-page "home"
                  :task-details-page "task_details"})
 
-(defn gt-task-details-page! []
-  (.task_details actions))
+(defn gt-screen! [page-id & params]
+  (apply (aget actions (page-id scene-keys)) params))
+
