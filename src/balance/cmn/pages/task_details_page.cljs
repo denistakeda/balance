@@ -24,15 +24,17 @@
           {:keys [id title description]} @task]
       [rn/view {:style (:page styles)}
        [rn/text-input {:style                  (:title styles)
-                       :value                  title
+                       :default-value          title
                        :placeholder            "Title"
                        :multiline              true
+                       :auto-correct           false
                        :placeholder-text-color "gray"
                        :on-change-text         #(update-task id [:title] %)}]
        [rn/text-input {:style                  (:description styles)
-                       :value                  description
+                       :default-value          description
                        :placeholder            "Task Description"
                        :multiline              true
+                       :auto-correct           false
                        :placeholder-text-color "gray"
                        :on-change-text         #(update-task id [:description] %)}]])))
 
