@@ -10,6 +10,11 @@
 (def flat-list (r/adapt-react-class (.-FlatList ReactNative)))
 (def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
 (def text-input (r/adapt-react-class (.-TextInput ReactNative)))
+(def async-storage (.-AsyncStorage ReactNative))
 
 (defn alert [title]
       (.alert (.-Alert ReactNative) title))
+
+(defn save-to-storage! [key value]
+  (.setItem async-storage key value))
+

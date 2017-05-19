@@ -3,7 +3,8 @@
    [re-frame.core :refer [reg-event-db after reg-fx reg-event-fx]]
    [clojure.spec.alpha :as s]
    [balance.db :as db :refer [app-db]]
-   [balance.libs.rnrf :as rnrf]))
+   [balance.libs.rnrf :as rnrf]
+   [balance.boot :refer [save-store-debounced!]]))
 
 ;; -- Interceptors ------------------------------------------------------------
 ;;
@@ -16,10 +17,18 @@
     (let [explain-data (s/explain-data spec db)]
       (throw (ex-info (str "Spec check after " event " failed: " explain-data) explain-data)))))
 
-(def validate-spec
-  (if goog.DEBUG
-    (after (partial check-and-throw ::db/app-db))
-    []))
+(defn save-database
+  "Save database to the local storage"
+  [db _]
+  (save-store-debounced! db))
+
+(def default-interceptors
+  (let [check-and-throw-interceptor (after (partial check-and-throw ::db/app-db))
+        save-database-interceptor   (after save-database)]
+    (if goog.DEBUG
+      [check-and-throw-interceptor
+       save-database-interceptor]
+      [save-database-interceptor])))
 
 ;; -- Effects ---------------------------------------------------------------
 ;;
@@ -34,19 +43,19 @@
 
 (reg-event-db
  :initialize-db
- validate-spec
+ default-interceptors
  (fn [_ _]
    app-db))
 
 (reg-event-db
  :set-greeting
- validate-spec
+ default-interceptors
  (fn [db [_ value]]
    (assoc db :greeting value)))
 
 (reg-event-fx
   :open-task-details
-  validate-spec
+  default-interceptors
   (fn [{:keys [db]} [_ task-id]]
     {:db       (assoc-in db [:app-state :current-task-id] task-id)
      :navigate :task-details-page}))
@@ -54,13 +63,13 @@
 
 (reg-event-db
   :update-task
-  validate-spec
+  default-interceptors
   (fn [db [_ task-id path value]]
     (assoc-in db (into [:db :tasks task-id] path) value)))
 
 (reg-event-fx
   :create-task
-  validate-spec
+  default-interceptors
   (fn [{:keys [db]} _]
     {:navigate :task-details-page
      :db       (let [id (cljs.core/random-uuid)]
