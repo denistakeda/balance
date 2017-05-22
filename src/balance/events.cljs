@@ -44,8 +44,8 @@
 (reg-event-db
  :initialize-db
  default-interceptors
- (fn [_ _]
-   app-db))
+ (fn [_ [_ db]]
+   (or db app-db)))
 
 (reg-event-db
  :set-greeting

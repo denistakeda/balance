@@ -18,3 +18,6 @@
 (defn save-to-storage! [key value]
   (.setItem async-storage key value))
 
+(defn get-from-storage [key cb]
+  (.then (.getItem async-storage key) cb))
+
