@@ -37,7 +37,7 @@
 (reg-fx
   :navigate
   (fn [value]
-    (rnrf/gt-screen! value)))
+    (apply rnrf/gt-screen! value)))
 
 ;; -- Handlers --------------------------------------------------------------
 
@@ -47,33 +47,9 @@
  (fn [_ [_ db]]
    (or db app-db)))
 
-(reg-event-db
- :set-greeting
- default-interceptors
- (fn [db [_ value]]
-   (assoc db :greeting value)))
-
 (reg-event-fx
   :open-task-details
   default-interceptors
   (fn [{:keys [db]} [_ task-id]]
-    {:db       (assoc-in db [:app-state :current-task-id] task-id)
-     :navigate :task-details-page}))
-
-
-(reg-event-db
-  :update-task
-  default-interceptors
-  (fn [db [_ task-id path value]]
-    (assoc-in db (into [:db :tasks task-id] path) value)))
-
-(reg-event-fx
-  :create-task
-  default-interceptors
-  (fn [{:keys [db]} _]
-    {:navigate :task-details-page
-     :db       (let [id (cljs.core/random-uuid)]
-                 (-> db
-                   (assoc-in [:db :tasks id] {})
-                   (assoc-in [:app-state :current-task-id] id)))}))
-
+    {:db       (assoc db :current-task-id task-id)
+     :navigate [:task-details-page task-id]}))

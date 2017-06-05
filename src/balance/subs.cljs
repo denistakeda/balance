@@ -5,7 +5,6 @@
 (reg-sub
   :ds
   (fn [db _]
-    (println @(:ds db))
     (:ds db)))
 
 (reg-sub
@@ -20,3 +19,8 @@
   :<- [:ds]
   (fn [ds [_ id]]
     @(pull ds '[:task/title :task/description] id)))
+
+(reg-sub
+  :current-task-id
+  (fn [db _]
+    (:current-task-id db)))

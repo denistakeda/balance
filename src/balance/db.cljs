@@ -29,3 +29,7 @@
 (def app-db
   { :greeting "Hello Clojure in iOS and Android!"
     :ds       conn })
+
+(defn entity
+  ([pattern id] (d/pull @conn pattern id))
+  ([id] (entity '[*] id)))
