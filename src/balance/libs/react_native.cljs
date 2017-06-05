@@ -7,10 +7,28 @@
 (def text (r/adapt-react-class (.-Text ReactNative)))
 (def view (r/adapt-react-class (.-View ReactNative)))
 (def image (r/adapt-react-class (.-Image ReactNative)))
-(def flat-list (r/adapt-react-class (.-FlatList ReactNative)))
 (def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
 (def text-input (r/adapt-react-class (.-TextInput ReactNative)))
 (def async-storage (.-AsyncStorage ReactNative))
+
+;; FlatList optimizations ----------------------------------
+(def ^:private FlatList (r/adapt-react-class (.-FlatList ReactNative)))
+
+(defn- key-extractor [item]
+  item)
+
+
+(defn render-item [item]
+  (r/as-element [task-item ((js->clj item) "item")]))
+
+
+(defn- optimized-render-item [render-item item]
+  (r/as-element (render-item ((js->clj item) "item"))))
+
+(defn flat-list [params]
+  [FlatList (merge params { :key-extractor key-extractor
+                            :render-item   (partial optimized-render-item (:render-item params))})])
+ ;; ---------------------------------------------------------
 
 (defn alert [title]
       (.alert (.-Alert ReactNative) title))

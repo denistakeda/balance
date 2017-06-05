@@ -16,22 +16,20 @@
 (def page-key (:home-page scene-keys))
 (def page-title "Home")
 
-(defn render-item [item]
-  (r/as-element [task-item (-> item .-item .-key)]))
-
 (defn page []
   (fn []
-    (let [tasks-keys (subscribe [:get-tasks-keys])]
-      [rn/view {:style (:page styles)}
-       [rn/flat-list {:data        @tasks-keys
-                      :render-item render-item
-                      :style       (:task-list styles)}]])))
+    (let [task-ids (subscribe [:task-ids])]
+      [rn/view { :style (:page styles) }
+       [rn/flat-list { :data        @task-ids
+                       :render-item (fn [item] [task-item item])
+                       :style       (:task-list styles) } ]])))
 
 (defn task-item [task-id]
   (fn []
-    (let [task (subscribe [:get-task task-id])
-          {:keys [title description]} @task]
-      [rn/touchable-highlight {:on-press #(dispatch [:open-task-details task-id])}
-       [rn/view {:style (:task-item styles)}
-        [rn/text {:style (:task-title styles)} title]
-        [rn/text {:style (:task-description styles)} description]]])))
+    (let [task @(subscribe [:task task-id])]
+      [rn/touchable-highlight { :on-press #(dispatch [:open-task-details task-id]) }
+       [rn/view { :style (:task-item styles) }
+        [rn/text { :style (:task-title styles) }
+         (:task/title task)]
+        [rn/text { :style (:task-description styles) }
+         (:task/description task)]]])))
