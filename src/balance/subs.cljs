@@ -1,5 +1,6 @@
 (ns balance.subs
-  (:require [re-frame.core :refer [reg-sub]]
+  (:require [re-frame.core :refer [reg-sub reg-sub-raw]]
+            [balance.db :refer [conn]]
             [posh.reagent :refer [q pull]]))
 
 (reg-sub
@@ -7,20 +8,18 @@
   (fn [db _]
     (:ds db)))
 
-(reg-sub
+(reg-sub-raw
   :task-ids
-  :<- [:ds]
-  (fn [ds _]
-    @(q '[ :find  [?tid ...]
-          :where [?tid :task/title]] ds)))
+  (fn [_ _]
+    (q '[ :find  [?tid ...]
+          :where [?tid :task/title]] conn)))
 
-(reg-sub
+(reg-sub-raw
   :task
-  :<- [:ds]
-  (fn [ds [_ id]]
-    @(pull ds '[:task/title :task/description] id)))
+  (fn [_ [_ id]]
+    (pull conn '[:task/title :task/description]  id)))
 
 (reg-sub
-  :current-task-id
+  :current-task
   (fn [db _]
-    (:current-task-id db)))
+    (:current-task db)))

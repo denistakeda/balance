@@ -27,8 +27,7 @@
 (posh! conn)
 
 (def app-db
-  { :greeting "Hello Clojure in iOS and Android!"
-    :ds       conn })
+  { :greeting "Hello Clojure in iOS and Android!" })
 
 (defn entity
   ([pattern id] (d/pull @conn pattern id))

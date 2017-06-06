@@ -19,4 +19,5 @@
                  :default     true}]
     [rnrf/scene {:key       task-detais-page/page-key
                  :component (r/reactify-component task-detais-page/page)
-                 :title     task-detais-page/page-title}]]])
+                 :title     task-detais-page/page-title
+                 :on-back   #(dispatch [:commit-current-task])}]]])

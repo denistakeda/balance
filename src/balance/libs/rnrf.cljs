@@ -14,5 +14,7 @@
                  :task-details-page "task_details"})
 
 (defn gt-screen! [page-id & params]
-  (apply (aget actions (page-id scene-keys)) params))
+  (if (= page-id :back)
+    (.pop actions)
+    (apply (aget actions (page-id scene-keys)) params)))
 

@@ -18,23 +18,17 @@
 
 (defn page []
   (fn []
-    (if-let [task-id @(subscribe [:current-task-id])]
-      [task-details (entity task-id)]
-      [task-details { :db/id (- (rand-int 10000)) }])))
-
-(defn task-details [task]
-  (let [title       (r/atom (:task/title task))
-        description (r/atom (:task/description task))]
-    [rn/view { :style (:page styles) }
-     [rn/text-input { :style                  (:title styles)
-                      :default-value          @title
-                      :auto-correct           false
-                      :multiline              true
-                      :placeholder-text-color "gray"
-                      :on-change-text         #(reset! title %) }]
-     [rn/text-input { :style                  (:description styles)
-                      :default-value          @description
-                      :auto-correct           false
-                      :multiline              true
-                      :placeholder-text-color "gray"
-                      :on-change-text         #(reset! description %) }]]))
+    (let [task @(subscribe [:current-task])]
+      [rn/view { :style (:page styles) }
+       [rn/text-input { :style                  (:title styles)
+                        :default-value          (:task/title task)
+                        :auto-correct           false
+                        :multiline              true
+                        :placeholder-text-color "gray"
+                        :on-change-text         #(dispatch [:update-current-task :title %]) }]
+       [rn/text-input { :style                  (:description styles)
+                        :default-value          (:task/description task)
+                        :auto-correct           false
+                        :multiline              true
+                        :placeholder-text-color "gray"
+                        :on-change-text         #(dispatch [:update-current-task :description %]) }]])))
