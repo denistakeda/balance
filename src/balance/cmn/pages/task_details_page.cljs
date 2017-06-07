@@ -1,9 +1,10 @@
 (ns balance.cmn.pages.task-details-page
   (:require
-    [balance.libs.react-native :as rn]
-    [reagent.core              :as r]
-    [re-frame.core             :refer [subscribe dispatch]]
-    [balance.db                :refer [entity]]))
+    [balance.libs.react-native        :as rn]
+    [balance.libs.react-router-native :as rr]
+    [reagent.core                     :as r]
+    [re-frame.core                    :refer [subscribe dispatch]]
+    [balance.db                       :refer [entity]]))
 
 (def path "/task/:taskId")
 
@@ -22,13 +23,11 @@
                            :font-size 18}})
 
 (defn page [props]
-  (let [go-back (-> props :history .-goBack)
-        task-id (-> props :match .-params .-taskId js/parseInt)
+  (let [task-id (-> props :match .-params .-taskId js/parseInt)
         task    (subscribe [:task-details task-id])]
-    (fn []
+    (fn [props]
       [rn/view { :style (:page styles) }
-       [rn/touchable-opacity { :on-press #(go-back) }
-        [rn/text { :style (:back-button styles) } "< Back"]]
+       [rr/back-button props]
        [rn/text-input { :style                  (:title styles)
                         :default-value          (:task/title @task)
                         :auto-correct           false

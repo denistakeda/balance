@@ -6,7 +6,7 @@
     [re-frame.core                       :refer [subscribe dispatch]]
     [balance.libs.react-router-native    :as rr]))
 
-(def styles {:page             {:margin-top     64
+(def styles {:page             {:margin-top     15
                                 :flex-grow      1
                                 :flex-direction "row"}
              :task-list        {:flex-grow 1}
