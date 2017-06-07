@@ -1,9 +1,10 @@
 (ns balance.cmn.pages.home-page
-  (:require [balance.libs.react-native :as rn]
-            [reagent.core :as r]
-            [posh.reagent :refer [pull]]
-            [re-frame.core :refer [subscribe dispatch]]
-            [balance.libs.rnrf :refer [scene-keys]]))
+  (:require
+    [balance.libs.react-native           :as rn]
+    [reagent.core                        :as r]
+    [balance.cmn.pages.task-details-page :refer [get-task-path]]
+    [re-frame.core                       :refer [subscribe dispatch]]
+    [balance.libs.react-router-native    :as rr]))
 
 (def styles {:page             {:margin-top     64
                                 :flex-grow      1
@@ -14,22 +15,20 @@
                                 :color "gray"}
              :task-description {:font-size 12}})
 
-(def page-key (:home-page scene-keys))
-(def page-title "Home")
+(def path "/")
 
 (defn page []
-  (fn []
-    (let [task-ids (subscribe [:task-ids])
-          input     ()]
+  (let [task-ids (subscribe [:task-ids])]
+    (fn []
       [rn/view { :style (:page styles) }
        [rn/flat-list { :data        @task-ids
                        :render-item (fn [item] [task-item item])
                        :style       (:task-list styles) } ]])))
 
 (defn task-item [task-id]
-  (fn []
-    (let [task (subscribe [:task task-id])]
-      [rn/touchable-highlight { :on-press #(dispatch [:open-task-details task-id]) }
+  (let [task (subscribe [:task-preview task-id])]
+    (fn [task-id]
+      [rr/link { :to (get-task-path task-id) }
        [rn/view { :style (:task-item styles) }
         [rn/text { :style (:task-title styles) }
          (:task/title @task)]

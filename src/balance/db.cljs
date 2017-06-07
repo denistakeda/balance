@@ -1,7 +1,8 @@
 (ns balance.db
-  (:require [clojure.spec.alpha :as s]
-            [datascript.core :as d]
-            [posh.reagent :refer [posh!]]))
+  (:require
+    [clojure.spec.alpha :as s]
+    [datascript.core    :as d]
+    [posh.reagent       :refer [posh!]]))
 
 ;; spec of app-db
 (s/def ::greeting string?)

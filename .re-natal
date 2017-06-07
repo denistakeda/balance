@@ -6,7 +6,7 @@
     "prod": "env/prod"
   },
   "modules": [
-    "react-native-router-flux"
+    "react-router-native"
   ],
   "imageDirs": [
     "images"

@@ -3,7 +3,6 @@
    [re-frame.core      :refer [reg-event-db after reg-fx reg-event-fx reg-cofx inject-cofx]]
    [clojure.spec.alpha :as s]
    [balance.db         :refer [app-db conn]]
-   [balance.libs.rnrf  :as rnrf]
    [posh.reagent       :refer [transact! pull q]]
    [balance.boot       :refer [save-store-debounced!]]))
 
@@ -32,11 +31,6 @@
 ;;
 
 (reg-fx
-  :navigate
-  (fn [value]
-    (apply rnrf/gt-screen! value)))
-
-(reg-fx
   :transact
   (fn [datoms]
     (transact! conn datoms)))
@@ -58,22 +52,8 @@
  (fn [_ _]
    app-db))
 
-(reg-event-db
-  :update-current-task
-  (fn [db [_ field value]]
-    (assoc-in db [:current-task field] value)))
-
 (reg-event-fx
-  :open-task-details
-  [(inject-cofx :ds)]
-  (fn [{:keys [db ds]} [_ task-id]]
-    (let [task (pull ds '[*] task-id)]
-      { :db       (assoc db :current-task @task)
-        :navigate [:task-details-page] })))
-
-(reg-event-fx
-  :commit-current-task
-  (fn [{:keys [db]} _]
-    { :transact [(:current-task db)]
-      :db       (dissoc db :current-tasks)
-      :navigate [:back] }))
+  :update-task
+  (fn [_ [_ id path value]]
+    { :transact [{ :db/id id
+                   path   value }] }))

@@ -1,8 +1,10 @@
 (ns balance.boot
-  (:require [balance.libs.react-native :refer [save-to-storage! get-from-storage]]
-            [cljs.reader :as reader]
-            [re-frame.core :refer [dispatch]])
-  (:import [goog.async Debouncer]))
+  (:require
+    [balance.libs.react-native :refer [save-to-storage! get-from-storage]]
+    [cljs.reader               :as reader]
+    [re-frame.core             :refer [dispatch]])
+  (:import
+    [goog.async Debouncer]))
 
 (def store-name "LifeBalanceAppStorage")
 

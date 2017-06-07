@@ -1,34 +1,45 @@
 (ns balance.cmn.pages.task-details-page
-  (:require [balance.libs.react-native :as rn]
-            [reagent.core :as r]
-            [re-frame.core :refer [subscribe dispatch]]
-            [balance.libs.rnrf :refer [scene-keys]]
-            [balance.db :refer [entity]]))
+  (:require
+    [balance.libs.react-native :as rn]
+    [reagent.core              :as r]
+    [re-frame.core             :refer [subscribe dispatch]]
+    [balance.db                :refer [entity]]))
 
-(def page-key (:task-details-page scene-keys))
-(def page-title "Task Details")
+(def path "/task/:taskId")
 
-(def styles {:page        {:margin-top 64
+(defn get-task-path [task-id]
+  (str "/task/" task-id))
+
+(def styles {:page        {:margin-top 10
                            :padding 10}
              :title       {:min-height 40
                            :font-size 20
                            :color "gray"}
              :description {:min-height 40
-                           :font-size 14}})
+                           :font-size 14}
+             :back-button {:padding-vertical 10
+                           :color "blue"
+                           :font-size 18}})
 
-(defn page []
-  (fn []
-    (let [task @(subscribe [:current-task])]
+(defn page [props]
+  (let [go-back (-> props :history .-goBack)
+        task-id (-> props :match .-params .-taskId js/parseInt)
+        task    (subscribe [:task-details task-id])]
+    (fn []
       [rn/view { :style (:page styles) }
+       [rn/touchable-opacity { :on-press #(go-back) }
+        [rn/text { :style (:back-button styles) } "< Back"]]
        [rn/text-input { :style                  (:title styles)
-                        :default-value          (:task/title task)
+                        :default-value          (:task/title @task)
                         :auto-correct           false
                         :multiline              true
+                        :placeholder            "Title"
                         :placeholder-text-color "gray"
-                        :on-change-text         #(dispatch [:update-current-task :title %]) }]
+                        :on-change-text         #(dispatch [:update-task task-id :task/title %]) }]
        [rn/text-input { :style                  (:description styles)
-                        :default-value          (:task/description task)
+                        :default-value          (:task/description @task)
                         :auto-correct           false
                         :multiline              true
+                        :placeholder            "Description"
                         :placeholder-text-color "gray"
-                        :on-change-text         #(dispatch [:update-current-task :description %]) }]])))
+                        :on-change-text         #(dispatch [:update-task task-id :task/description %]) }]])))

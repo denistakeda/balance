@@ -8,6 +8,7 @@
 (def view (r/adapt-react-class (.-View ReactNative)))
 (def image (r/adapt-react-class (.-Image ReactNative)))
 (def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
+(def touchable-opacity (r/adapt-react-class (.-TouchableOpacity ReactNative)))
 (def text-input (r/adapt-react-class (.-TextInput ReactNative)))
 (def async-storage (.-AsyncStorage ReactNative))
 
