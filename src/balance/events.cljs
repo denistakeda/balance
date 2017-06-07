@@ -20,8 +20,8 @@
 
 (defn save-database
   "Save database to the local storage"
-  [db _]
-  (save-store-debounced! db))
+  [_ _]
+  (save-store-debounced!))
 
 (def default-interceptors [(after save-database)])
 
@@ -54,6 +54,7 @@
 
 (reg-event-fx
   :update-task
+  default-interceptors
   (fn [_ [_ id path value]]
     { :transact [{ :db/id id
                    path   value }] }))

@@ -10,4 +10,5 @@
 
 (defn init []
       (dispatch-sync [:initialize-db])
+      (load-store!)
       (.registerComponent rn/app-registry "Balance" #(r/reactify-component app-root)))

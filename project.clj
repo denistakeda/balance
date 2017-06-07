@@ -8,6 +8,7 @@
                            [reagent "0.6.1" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
                            [re-frame "0.9.2"]
                            [datascript "0.16.1"]
+                           [datascript-transit "0.2.2"]
                            [posh "0.5.5"]]
             :plugins [[lein-cljsbuild "1.1.4"]
                       [lein-figwheel "0.5.10"]]

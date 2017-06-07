@@ -3,8 +3,7 @@
     [balance.libs.react-native        :as rn]
     [balance.libs.react-router-native :as rr]
     [reagent.core                     :as r]
-    [re-frame.core                    :refer [subscribe dispatch]]
-    [balance.db                       :refer [entity]]))
+    [re-frame.core                    :refer [subscribe dispatch]]))
 
 (def path "/task/:taskId")
 
