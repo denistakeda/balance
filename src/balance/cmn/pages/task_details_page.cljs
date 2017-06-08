@@ -10,9 +10,7 @@
 (defn get-task-path [task-id]
   (str "/task/" task-id))
 
-(def styles {:page        {:margin-top 10
-                           :padding 10}
-             :title       {:min-height 40
+(def styles {:title       {:min-height 40
                            :font-size 20
                            :color "gray"}
              :description {:min-height 40
@@ -25,19 +23,21 @@
   (let [task-id (-> props :match .-params .-taskId js/parseInt)
         task    (subscribe [:task-details task-id])]
     (fn [props]
-      [rn/view { :style (:page styles) }
-       [rr/back-button props]
-       [rn/text-input { :style                  (:title styles)
-                        :default-value          (:task/title @task)
-                        :auto-correct           false
-                        :multiline              true
-                        :placeholder            "Title"
-                        :placeholder-text-color "gray"
-                        :on-change-text         #(dispatch [:update-task task-id :task/title %]) }]
-       [rn/text-input { :style                  (:description styles)
-                        :default-value          (:task/description @task)
-                        :auto-correct           false
-                        :multiline              true
-                        :placeholder            "Description"
-                        :placeholder-text-color "gray"
-                        :on-change-text         #(dispatch [:update-task task-id :task/description %]) }]])))
+      [rr/screen { :history     (:history props)
+                   :title       "Task Details"
+                   :back-button true }
+       [rn/view
+         [rn/text-input { :style                  (:title styles)
+                          :default-value          (:task/title @task)
+                          :auto-correct           false
+                          :multiline              true
+                          :placeholder            "Title"
+                          :placeholder-text-color "gray"
+                          :on-change-text         #(dispatch [:update-task task-id :task/title %]) }]
+         [rn/text-input { :style                  (:description styles)
+                          :default-value          (:task/description @task)
+                          :auto-correct           false
+                          :multiline              true
+                          :placeholder            "Description"
+                          :placeholder-text-color "gray"
+                          :on-change-text         #(dispatch [:update-task task-id :task/description %]) }]]])))
