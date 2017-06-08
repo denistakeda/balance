@@ -4,24 +4,27 @@
 (def ReactNative (js/require "react-native"))
 
 (def app-registry (.-AppRegistry ReactNative))
-(def text (r/adapt-react-class (.-Text ReactNative)))
-(def view (r/adapt-react-class (.-View ReactNative)))
-(def image (r/adapt-react-class (.-Image ReactNative)))
-(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
-(def touchable-opacity (r/adapt-react-class (.-TouchableOpacity ReactNative)))
-(def text-input (r/adapt-react-class (.-TextInput ReactNative)))
+(def text (-> ReactNative .-Text r/adapt-react-class))
+(def image (-> ReactNative .-Image r/adapt-react-class))
+(def view (-> ReactNative .-View r/adapt-react-class))
+(def touchable-highlight (-> ReactNative .-TouchableHighlight r/adapt-react-class))
+(def touchable-opacity (-> ReactNative .-TouchableOpacity r/adapt-react-class))
+(def text-input (-> ReactNative .-TextInput r/adapt-react-class))
+
+;; Async storage ------------------------------------------
 (def async-storage (.-AsyncStorage ReactNative))
 
+(defn save-to-storage! [key value]
+  (.setItem async-storage key value))
+
+(defn get-from-storage [key cb]
+  (.then (.getItem async-storage key) cb))
+
 ;; FlatList optimizations ----------------------------------
-(def ^:private FlatList (r/adapt-react-class (.-FlatList ReactNative)))
+(def ^:private FlatList (-> ReactNative .-FlatList r/adapt-react-class))
 
 (defn- key-extractor [item]
   item)
-
-
-(defn render-item [item]
-  (r/as-element [task-item ((js->clj item) "item")]))
-
 
 (defn- optimized-render-item [render-item item]
   (r/as-element (render-item ((js->clj item) "item"))))
@@ -33,10 +36,4 @@
 
 (defn alert [title]
       (.alert (.-Alert ReactNative) title))
-
-(defn save-to-storage! [key value]
-  (.setItem async-storage key value))
-
-(defn get-from-storage [key cb]
-  (.then (.getItem async-storage key) cb))
 

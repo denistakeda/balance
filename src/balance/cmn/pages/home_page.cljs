@@ -17,14 +17,6 @@
 
 (def path "/")
 
-(defn page []
-  (let [task-ids (subscribe [:task-ids])]
-    (fn []
-      [rn/view { :style (:page styles) }
-       [rn/flat-list { :data        @task-ids
-                       :render-item (fn [item] [task-item item])
-                       :style       (:task-list styles) } ]])))
-
 (defn task-item [task-id]
   (let [task (subscribe [:task-preview task-id])]
     (fn [task-id]
@@ -34,3 +26,11 @@
          (:task/title @task)]
         [rn/text { :style (:task-description styles) }
          (:task/description @task)]]])))
+
+(defn page []
+  (let [task-ids (subscribe [:task-ids])]
+    (fn []
+      [rn/view { :style (:page styles) }
+       [rn/flat-list { :data        @task-ids
+                       :render-item (fn [item] [task-item item])
+                       :style       (:task-list styles) } ]])))
