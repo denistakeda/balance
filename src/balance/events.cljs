@@ -45,6 +45,18 @@
   (fn [coeffects _]
     (assoc coeffects :ds conn)))
 
+;; -- Helpers ---------------------------------------------------------------
+
+(defn reg-event-ds
+  ([k interceptors handler]
+    (reg-event-fx
+      k
+      (into [] (concat [(inject-cofx :ds)] interceptors))
+      (fn [{:keys [ds]} signal]
+        { :transact (handler @ds signal) })))
+  ([k handler]
+     (reg-event-ds k [] handler)))
+
 ;; -- Handlers --------------------------------------------------------------
 
 (reg-event-db
@@ -52,9 +64,8 @@
  (fn [_ _]
    app-db))
 
-(reg-event-fx
+(reg-event-ds
   :update-task
-  default-interceptors
   (fn [_ [_ id path value]]
-    { :transact [{ :db/id id
-                   path   value }] }))
+    [[:db/add id path value]]))
+
