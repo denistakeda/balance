@@ -4,18 +4,32 @@
     [balance.db    :refer [conn]]
     [posh.reagent  :refer [q pull]]))
 
-(reg-sub-raw
+;; -- Helpers ---------------------------------------
+
+(defn reg-query-sub [sub-name query]
+  (reg-sub-raw
+    sub-name
+    (fn [_ [_ & params]]
+      (let [pre-q (partial q query conn)]
+        (apply pre-q params)))))
+
+(defn reg-pull-sub [sub-name pattern]
+  (reg-sub-raw
+    sub-name
+    (fn [_ [_ id]]
+      (pull conn pattern id))))
+
+;; -- Subscriptions ---------------------------------
+
+(reg-query-sub
   :task-ids
-  (fn [_ _]
-    (q '[ :find  [?tid ...]
-          :where [?tid :task/title]] conn)))
+  '[ :find  [?tid ...]
+     :where [?tid :task/title]])
 
-(reg-sub-raw
+(reg-pull-sub
   :task-preview
-  (fn [_ [_ id]]
-    (pull conn '[:task/title :task/description]  id)))
+  '[:task/title :task/description])
 
-(reg-sub-raw
+(reg-pull-sub
   :task-details
-  (fn [_ [_ id]]
-    (pull conn '[*]  id)))
+  '[*])
