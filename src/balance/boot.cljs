@@ -25,7 +25,7 @@
     (fn [& args] (.apply (.-fire dbnc) dbnc (to-array args)))))
 
 (def save-store-debounced!
-  (debounce save-store! 2000))
+  (debounce save-store! 800))
 
 
 

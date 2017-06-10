@@ -2,14 +2,13 @@
   (:require
     [clojure.spec.alpha :as s]
     [datascript.core    :as d]
-    [posh.reagent       :refer [posh!]]))
+    [data-frame.core    :as df]))
 
-;; initial state of app-db
 (def schema {})
 
 (def conn (d/create-conn schema))
 
-(posh! conn)
+(df/connect! conn)
 
 (def app-db
   { :greeting "Hello Clojure in iOS and Android!" })
