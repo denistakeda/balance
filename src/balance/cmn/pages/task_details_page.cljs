@@ -5,11 +5,6 @@
     [reagent.core                     :as r]
     [re-frame.core                    :refer [subscribe dispatch]]))
 
-(def path "/task/:taskId")
-
-(defn get-task-path [task-id]
-  (str "/task/" task-id))
-
 (def styles {:title       {:min-height 40
                            :font-size 20
                            :color "gray"}

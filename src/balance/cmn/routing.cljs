@@ -9,10 +9,10 @@
     [balance.subs]))
 
 (defn routing []
-  [rr/native-router
+  [rr/router { :history rr/history }
    [rn/view
      [rr/route { :exact     true
-                 :path      home-page/path
+                 :path      (:home rr/paths)
                  :component (r/reactify-component home-page/page) }]
-     [rr/route { :path      task-detais-page/path
+     [rr/route { :path      (:task-details rr/paths)
                  :component (r/reactify-component task-detais-page/page) }]]])

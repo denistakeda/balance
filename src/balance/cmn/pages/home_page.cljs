@@ -2,7 +2,6 @@
   (:require
     [balance.libs.react-native           :as rn]
     [reagent.core                        :as r]
-    [balance.cmn.pages.task-details-page :refer [get-task-path]]
     [re-frame.core                       :refer [subscribe dispatch]]
     [balance.libs.react-router-native    :as rr]))
 
@@ -15,12 +14,10 @@
                                 :color "gray"}
              :task-description {:font-size 12}})
 
-(def path "/")
-
 (defn task-item [task-id]
   (let [task (subscribe [:task-preview task-id])]
     (fn [task-id]
-      [rr/link { :to (get-task-path task-id) }
+      [rr/link { :to (rr/get-url :task-details { :taskId task-id }) }
        [rn/view { :style (:task-item styles) }
         [rn/text { :style (:task-title styles) }
          (:task/title @task)]

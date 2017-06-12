@@ -5,14 +5,30 @@
     [balance.libs.react-native :as rn]))
 
 (def ReactRouterNative (js/require "react-router-native"))
+(def PathToRegexp (js/require "path-to-regexp"))
+(def create-history (-> "history/createMemoryHistory" js/require .-default))
 
-(def native-router (-> ReactRouterNative .-NativeRouter r/adapt-react-class))
+(def router (-> ReactRouterNative .-Router r/adapt-react-class))
 (def route (-> ReactRouterNative .-Route r/adapt-react-class))
 (def link (-> ReactRouterNative .-Link r/adapt-react-class))
 
 
-(def history (.-history ReactRouterNative))
-(def location (.-location ReactRouterNative))
+(def paths { :home         "/"
+             :task-details "/tasks/:taskId" })
+
+(defn get-url [url-key params]
+  ((.compile PathToRegexp (url-key paths)) (clj->js params)))
+
+
+(def history (create-history))
+
+(defn go-back []
+  (.goBack history))
+
+(defn navigate-to [url-key params]
+  (if (= url-key :back)
+    (go-back)
+    (.push history (get-url url-key params))))
 
 
 
@@ -28,16 +44,15 @@
                                   :font-weight      "bold" }
               :back-button-icon { :padding-vertical 5 }})
 
-(defn screen [{:keys [history back-button title]} children]
-  (let [go-back (.-goBack history)]
-    [rn/view { :style (:wrapper styles) }
-     [rn/view { :style (:top-menu styles) }
-      (when back-button
-        [rn/touchable-opacity { :on-press #(go-back) }
-         [icon { :name   "chevron-left"
-                 :size   25
-                 :style  (:back-button-icon styles) }]])
-      (when title
-        [rn/view { :style (:title styles) }
-         [rn/text { :style (:title-text styles) } title]])]
-     children]))
+(defn screen [{:keys [back-button title]} children]
+  [rn/view { :style (:wrapper styles) }
+   [rn/view { :style (:top-menu styles) }
+    (when back-button
+      [rn/touchable-opacity { :on-press #(go-back) }
+       [icon { :name   "chevron-left"
+               :size   25
+               :style  (:back-button-icon styles) }]])
+    (when title
+      [rn/view { :style (:title styles) }
+       [rn/text { :style (:title-text styles) } title]])]
+   children])

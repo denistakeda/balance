@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "babel-plugin-transform-es2015-block-scoping": "6.15.0",
+    "history": "^4.6.1",
+    "path-to-regexp": "^1.7.0",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
     "react-native-vector-icons": "^4.2.0",

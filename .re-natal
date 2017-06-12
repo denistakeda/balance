@@ -7,7 +7,9 @@
   },
   "modules": [
     "react-router-native",
-    "react-native-vector-icons/FontAwesome"
+    "react-native-vector-icons/FontAwesome",
+    "history/createMemoryHistory",
+    "path-to-regexp"
   ],
   "imageDirs": [
     "images"
