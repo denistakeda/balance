@@ -44,11 +44,11 @@
                                   :font-weight      "bold" }
               :back-button-icon { :padding-vertical 5 }})
 
-(defn screen [{:keys [back-button title]} children]
+(defn screen [{:keys [back-button title on-back]} children]
   [rn/view { :style (:wrapper styles) }
    [rn/view { :style (:top-menu styles) }
     (when back-button
-      [rn/touchable-opacity { :on-press #(go-back) }
+      [rn/touchable-opacity { :on-press #((or on-back go-back)) }
        [icon { :name   "chevron-left"
                :size   25
                :style  (:back-button-icon styles) }]])

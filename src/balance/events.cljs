@@ -26,6 +26,11 @@
   (fn [[path-key & params]]
     (rr/navigate-to path-key (or (first params) {}))))
 
+;; -- Helpers --------------------------------------------------------------
+
+(defn filter-nil [m]
+  "Remove from map all key-value pairs where value is nil"
+  (into {} (filter (comp some? val) m)))
 
 ;; -- Handlers --------------------------------------------------------------
 
@@ -34,17 +39,12 @@
  (fn [_ _]
    app-db))
 
-(reg-event-ds
-  :update-task
+(reg-event-fx
+  :commit-task
   default-interceptors
-  (fn [_ [_ id path value]]
-    [[:db/add id path value]]))
-
-(reg-event-dx
-  :create-task
-  (fn [_ _]
-    (let [id (random-uuid)]
-      { :transact [{:db/id -1
-                    :id    id}]
-        :navigate [:task-details {:taskId id}] })))
-
+  (fn [_ [_ task]]
+    (let [task (filter-nil task)]
+      (if (contains? task :task/title)
+        { :navigate [:back] }
+        { :transact [task]
+          :navigate [:back] }))))
