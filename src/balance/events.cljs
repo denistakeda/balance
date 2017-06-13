@@ -17,7 +17,7 @@
   [_ _]
   (save-store-debounced!))
 
-(def default-interceptors [(after save-database)])
+(def save-database-interceptor (after save-database))
 
 ;; -- Effects ---------------------------------------------------------------
 
@@ -26,11 +26,29 @@
   (fn [[path-key & params]]
     (rr/navigate-to path-key (or (first params) {}))))
 
+;; -- Co-effects -----------------------------------------------------------
+
+(reg-cofx
+ :now
+ (fn [coeffects _]
+   (assoc coeffects :now (js.Date.))))
+
 ;; -- Helpers --------------------------------------------------------------
 
 (defn filter-nil [m]
   "Remove from map all key-value pairs where value is nil"
   (into {} (filter (comp some? val) m)))
+
+(defn insert-creation-date [task now]
+  (if (neg? (:db/id task))
+    (assoc task :task/creation-date now)
+    task))
+
+(defn extend-task [task now]
+  (-> task
+       filter-nil
+       (assoc :task/last-update-date now)
+       (insert-creation-date now)))
 
 ;; -- Handlers --------------------------------------------------------------
 
@@ -41,10 +59,11 @@
 
 (reg-event-fx
   :commit-task
-  default-interceptors
-  (fn [_ [_ task]]
-    (let [task (filter-nil task)]
-      (if (contains? task :task/title)
+  [save-database-interceptor
+   (inject-cofx :now)]
+  (fn [{:keys [now]} [_ task]]
+    (let [extended-task (extend-task task now)]
+      (if (contains? exteded-task :task/title)
         { :navigate [:back] }
-        { :transact [task]
+        { :transact [extended-task]
           :navigate [:back] }))))
