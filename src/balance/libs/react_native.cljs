@@ -10,6 +10,8 @@
 (def touchable-highlight (-> ReactNative .-TouchableHighlight r/adapt-react-class))
 (def touchable-opacity (-> ReactNative .-TouchableOpacity r/adapt-react-class))
 (def text-input (-> ReactNative .-TextInput r/adapt-react-class))
+(def animated-view (-> ReactNative .-Animated .-View r/adapt-react-class))
+(def animated-value (-> ReactNative .-Animated .-Value))
 
 ;; Async storage ------------------------------------------
 (def async-storage (.-AsyncStorage ReactNative))
@@ -36,4 +38,3 @@
 
 (defn alert [title]
       (.alert (.-Alert ReactNative) title))
-

@@ -9,7 +9,8 @@
     "react-router-native",
     "react-native-vector-icons/FontAwesome",
     "history/createMemoryHistory",
-    "path-to-regexp"
+    "path-to-regexp",
+    "react-native-interactable"
   ],
   "imageDirs": [
     "images"

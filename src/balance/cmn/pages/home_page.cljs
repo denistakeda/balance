@@ -1,15 +1,29 @@
 (ns balance.cmn.pages.home-page
   (:require
-    [balance.libs.react-native           :as rn]
-    [reagent.core                        :as r]
-    [re-frame.core                       :refer [subscribe dispatch]]
-    [balance.libs.react-router-native    :as rr]))
+   [balance.libs.react-native              :as rn]
+   [balance.libs.react-native-interactable :as i]
+   [balance.libs.icons                     :refer [icon]]
+   [reagent.core                           :as r]
+   [re-frame.core                          :refer [subscribe dispatch]]
+   [balance.libs.react-router-native       :as rr]))
 
 (def styles {:page               {:margin-top     15
                                   :flex-grow      1}
+             :item-container     {:flex-grow        1
+                                  :justify-content  "center"
+                                  :background-color "white"}
+             :actions            {:position "absolute"
+                                  :right    0
+                                  :top      0
+                                  :bottom   0
+                                  :flex-direction "row"}
+             :finish-task-button {:padding          10
+                                  :background-color "#4caf50"
+                                  :justify-content  "center"}
              :create-new-wrapper {:padding 10}
              :task-list          {:flex-grow 1}
-             :task-item          {:padding 10}
+             :task-item          {:padding 10
+                                  :background-color "white"}
              :task-title         {:font-size 18
                                   :color "gray"}
              :task-description   {:font-size 12}})
@@ -24,6 +38,20 @@
         [rn/text { :style (:task-description styles) }
          (:task/description @task)]]])))
 
+(defn actions [task-id]
+  [rn/view {:style (:actions styles)}
+   [rn/view {:style (:finish-task-button styles)}
+    [icon {:name "check" :size 30 :color "white"}]]])
+
+(defn animated-item [task-id]
+  [rn/view {:style (:item-container styles)}
+   [rn/view
+    [actions task-id]
+    [i/interactable-view {:horizontal-only true
+                          :snap-points     (clj->js [{:x 0    :id "closed"}
+                                                     {:x -50  :id "open"}])}
+     [task-item task-id]]]])
+
 (defn new-task-button []
   [rn/view { :style (:create-new-wrapper styles)}
     [rr/link { :to (rr/get-url :task-details { :taskId -1}) }
@@ -35,5 +63,5 @@
       [rn/view { :style (:page styles) }
        [new-task-button]
        [rn/flat-list { :data        @task-ids
-                       :render-item (fn [item] [task-item item])
+                       :render-item (fn [item] [animated-item item])
                        :style       (:task-list styles) } ]])))
