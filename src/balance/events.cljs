@@ -67,3 +67,11 @@
         { :navigate [:back] }
         { :transact [extended-task]
           :navigate [:back] }))))
+
+(reg-event-fx
+ :task-done
+ [save-database-interceptor
+  (inject-cofx :now)]
+ (fn [{:keys [now]} [_ task-id]]
+   {:transact [{:db/id            task-id
+                :task/finish-date now}]}))

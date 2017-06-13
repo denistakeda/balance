@@ -10,9 +10,5 @@
      :where [?tid :task/title]])
 
 (reg-pull-sub
-  :task-preview
-  '[:task/title :task/description])
-
-(reg-pull-sub
   :task-details
   '[*])
