@@ -16,10 +16,14 @@
                                   :right    0
                                   :top      0
                                   :bottom   0
+                                  :justify-content "space-between"
                                   :flex-direction "row"}
              :finish-task-button {:padding          10
                                   :background-color "#4caf50"
                                   :justify-content  "center"}
+             :close-task-button  {:padding          13
+                                  :background-color "red"
+                                  :justify-content "center"}
              :create-new-wrapper {:padding 10}
              :task-list          {:flex-grow 1}
              :task-item          {:padding 10
@@ -44,6 +48,10 @@
 
 (defn actions [task-id on-press]
   [rn/view {:style (:actions styles)}
+   [rn/view {:style (:close-task-button styles)}
+    [rn/touchable-opacity {:on-press #(do (dispatch [:task-remove task-id])
+                                          (on-press))}
+     [icon {:name "times" :size 30 :color "white"}]]]
    [rn/view {:style (:finish-task-button styles)}
     [rn/touchable-opacity {:on-press #(do (dispatch [:task-done task-id])
                                           (on-press))}
@@ -58,7 +66,7 @@
         [i/interactable-view {:ref             #(reset! int-ref %)
                               :horizontal-only true
                               :snap-points     (clj->js [{:x 0    :id "closed"}
-                                                         {:x -50  :id "open"}])}
+                                                         {:x -100  :id "right-menu"}])}
          [task-item task-id]]]])))
 
 (defn new-task-button []

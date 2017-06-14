@@ -75,3 +75,9 @@
  (fn [{:keys [now]} [_ task-id]]
    {:transact [{:db/id            task-id
                 :task/finish-date now}]}))
+
+(reg-event-ds
+ :task-remove
+ [save-database-interceptor]
+ (fn [_ [_ task-id]]
+   [[:db.fn/retractEntity task-id]]))
