@@ -7,7 +7,8 @@
    [balance.libs.icons                     :refer [icon]]
    [re-frame.core                          :refer [subscribe dispatch]]))
 
-(def styles { :item-container     {:flex-grow        1
+(def styles (rn/create-stylesheet
+             { :item-container     {:flex-grow        1
                                    :justify-content  "center"
                                    :background-color "white"}
              :actions            {:position "absolute"
@@ -26,7 +27,7 @@
                                   :background-color "white"}
              :task-title         {:font-size 18
                                   :color "gray"}
-             :task-description   {:font-size 12}})
+             :task-description   {:font-size 12}}))
 
 
 (defn task-item [task-id]

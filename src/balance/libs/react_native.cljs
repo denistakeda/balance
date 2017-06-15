@@ -1,5 +1,7 @@
 (ns balance.libs.react-native
-  (:require [reagent.core :as r]))
+  (:require
+   [reagent.core :as r]
+   [camel-snake-kebab.core :refer [->camelCase ->kebab-case-keyword]]))
 
 (def ReactNative (js/require "react-native"))
 
@@ -34,7 +36,28 @@
 (defn flat-list [params]
   [FlatList (merge params { :key-extractor key-extractor
                             :render-item   (partial optimized-render-item (:render-item params))})])
- ;; ---------------------------------------------------------
+;; -- Styles ------------------------------------------------
+
+(defn camel-case-keys
+  "Recursively transforms all map keys into camel case."
+  [m]
+  (if (map? m)
+    (into {} (map (fn [[k v]] [(->camelCase k) (camel-case-keys v)]) m))
+    m))
+
+(defn kebab-case-keys
+  "Transforms all map keys into kebab case."
+  [m]
+  (into {} (map (fn [[k v]] [(->kebab-case-keyword k) v]) m)))
+
+(defn create-stylesheet [styles]
+  (-> ReactNative
+      .-StyleSheet
+      (.create (clj->js (camel-case-keys styles)))
+      js->clj
+      kebab-case-keys))
+
+;; -- Alert --------------------------------------------------
 
 (defn alert [title]
       (.alert (.-Alert ReactNative) title))

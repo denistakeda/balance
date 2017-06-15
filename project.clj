@@ -9,6 +9,7 @@
                            [re-frame "0.9.4"]
                            [datascript "0.16.1"]
                            [datascript-transit "0.2.2"]
+                           [camel-snake-kebab "0.4.0"]
                            [data-frame "0.1.1"]]
             :plugins [[lein-cljsbuild "1.1.4"]
                       [lein-figwheel "0.5.10"]]
@@ -56,5 +57,3 @@
                                                                    :optimizations :simple
                                                                    :closure-defines {"goog.DEBUG" false}}}
 #_($PROD_PROFILES$)]}}})
-
-
