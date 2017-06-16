@@ -5,15 +5,12 @@
     [reagent.core                     :as r]
     [re-frame.core                    :refer [subscribe dispatch]]))
 
-(def styles (rn/create-stylesheet
+(def styles (rn/stylesheet
              {:title       {:min-height 40
                             :font-size 20
-                            :color "gray"}
+                            :color :color/gray}
               :description {:min-height 40
-                            :font-size 14}
-              :back-button {:padding-vertical 10
-                            :color "blue"
-                            :font-size 18}}))
+                            :font-size :font-size/small}}))
 
 (defn page [props]
   (let [task-id     (-> props :match .-params .-taskId js/parseInt)

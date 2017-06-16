@@ -1,6 +1,7 @@
 (ns balance.libs.react-native
   (:require
    [reagent.core :as r]
+   [balance.styles.variables :refer [style-variables]]
    [camel-snake-kebab.core :refer [->camelCase ->kebab-case-keyword]]))
 
 (def ReactNative (js/require "react-native"))
@@ -48,7 +49,20 @@
 (defn kebab-case-keys
   "Transforms all map keys into kebab case."
   [m]
-  (into {} (map (fn [[k v]] [(->kebab-case-keyword k) v]) m)))
+  (if (map? m)
+    (into {} (map (fn [[k v]] [(->kebab-case-keyword k) v]) m))
+    m))
+
+(defn populate-style-variables [variables m]
+  (cond
+    (map? m)
+    (into {} (map (fn [[k v]] [k (populate-style-variables variables v)]) m))
+
+    (keyword? m)
+    (m variables)
+
+    :default
+    m))
 
 (defn create-stylesheet [styles]
   (-> ReactNative
@@ -56,6 +70,13 @@
       (.create (clj->js (camel-case-keys styles)))
       js->clj
       kebab-case-keys))
+
+(defn create-stylesheet-with-variables [variables styles]
+  (->> styles
+       (populate-style-variables variables)
+       create-stylesheet))
+
+(def stylesheet (partial create-stylesheet-with-variables style-variables))
 
 ;; -- Alert --------------------------------------------------
 

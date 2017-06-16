@@ -5,9 +5,8 @@
    [re-frame.core                          :refer [subscribe]]
    [balance.cmn.components.task-list-item  :refer [animated-item]]))
 
-(def styles (rn/create-stylesheet
-             {:page               {:margin-top     15
-                                   :flex-grow      1}
+(def styles (rn/stylesheet
+             {:page              :class/page
               :create-new-wrapper {:padding 10}
               :task-list          {:flex-grow 1}}))
 

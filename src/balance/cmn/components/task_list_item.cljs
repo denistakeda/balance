@@ -7,10 +7,10 @@
    [balance.libs.icons                     :refer [icon]]
    [re-frame.core                          :refer [subscribe dispatch]]))
 
-(def styles (rn/create-stylesheet
-             { :item-container     {:flex-grow        1
+(def styles (rn/stylesheet
+             {:item-container     {:flex-grow        1
                                    :justify-content  "center"
-                                   :background-color "white"}
+                                   :background-color :color/background}
              :actions            {:position "absolute"
                                   :right    0
                                   :top      0
@@ -18,16 +18,16 @@
                                   :justify-content "space-between"
                                   :flex-direction "row"}
              :finish-task-button {:padding          10
-                                  :background-color "#4caf50"
+                                  :background-color :color/green
                                   :justify-content  "center"}
              :close-task-button  {:padding          13
-                                  :background-color "red"
+                                  :background-color :color/red
                                   :justify-content "center"}
              :task-item          {:padding 10
-                                  :background-color "white"}
+                                  :background-color :color/background}
              :task-title         {:font-size 18
-                                  :color "gray"}
-             :task-description   {:font-size 12}}))
+                                  :color :color/gray}
+             :task-description   {:font-size :font-size/x-small}}))
 
 
 (defn task-item [task-id]
